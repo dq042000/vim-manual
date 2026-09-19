@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>我的 Neovim 手冊</title>
+<style>
+:root {
+  --bg: #f7f7f5; --card: #ffffff; --text: #1f2328; --muted: #5f6670; --line: #e3e3de;
+  --accent: #2f6fdb; --accent-soft: #e8f0fd; --warn: #b3541e; --warn-soft: #fdf1e9;
+  --kbd-bg: #f1f1ee; --kbd-line: #c9c9c3; --hl: #fff3a3;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #16181c; --card: #1e2127; --text: #e6e8eb; --muted: #9aa1ab; --line: #30343b;
+    --accent: #7aa7ff; --accent-soft: #1f2b40; --warn: #f0a070; --warn-soft: #3a2a20;
+    --kbd-bg: #2a2e35; --kbd-line: #454b55; --hl: #5a4f10;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #16181c; --card: #1e2127; --text: #e6e8eb; --muted: #9aa1ab; --line: #30343b;
+  --accent: #7aa7ff; --accent-soft: #1f2b40; --warn: #f0a070; --warn-soft: #3a2a20;
+  --kbd-bg: #2a2e35; --kbd-line: #454b55; --hl: #5a4f10;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.6 system-ui, -apple-system, "Noto Sans TC", "PingFang TC", sans-serif; }
+.wrap { max-width: 1100px; margin: 0 auto; padding: 0 16px 64px; }
+header { position: sticky; top: 0; z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line);
+  padding: 12px 0; }
+header .wrap { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; padding-bottom: 0; }
+h1 { font-size: 20px; margin: 0; }
+#q { flex: 1; min-width: 200px; font: inherit; padding: 8px 12px; border-radius: 8px;
+  border: 1px solid var(--line); background: var(--card); color: var(--text); }
+nav { display: flex; gap: 6px; flex-wrap: wrap; width: 100%; font-size: 13px; }
+nav a { color: var(--muted); text-decoration: none; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); }
+nav a:hover { color: var(--accent); border-color: var(--accent); }
+h2 { font-size: 18px; margin: 32px 0 12px; }
+p.lead { color: var(--muted); margin: 4px 0 12px; }
+kbd { font: 13px/1 ui-monospace, "JetBrains Mono", Menlo, monospace; background: var(--kbd-bg);
+  border: 1px solid var(--kbd-line); border-bottom-width: 2px; border-radius: 5px; padding: 3px 6px;
+  white-space: nowrap; }
+code { font: 13px ui-monospace, Menlo, monospace; background: var(--kbd-bg); padding: 1px 4px; border-radius: 4px; }
+
+/* 畫面地圖 */
+.map { display: grid; grid-template-columns: 1fr 2.4fr 1.2fr; grid-template-rows: auto 1fr;
+  gap: 6px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 10px; }
+.map .pane { border: 1.5px solid var(--line); border-radius: 8px; padding: 10px; font-size: 13px; }
+.map .pane b { display: block; font-size: 14px; margin-bottom: 6px; }
+.map .top { grid-column: 1 / 4; background: var(--accent-soft); }
+.map .tree, .map .claude { min-height: 150px; }
+.map .edit { border-color: var(--accent); }
+.map .pane div { margin: 3px 0; }
+@media (max-width: 720px) {
+  .map { grid-template-columns: 1fr; }
+  .map .top { grid-column: 1; }
+  .map .tree, .map .claude { min-height: 0; }
+}
+
+/* 情境卡片 */
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+.card h3 { margin: 0 0 8px; font-size: 16px; }
+.card table { width: 100%; border-collapse: collapse; }
+.card td { padding: 5px 0; border-top: 1px solid var(--line); vertical-align: top; }
+.card td:first-child { width: 42%; padding-right: 10px; }
+.card tr:first-child td { border-top: 0; }
+.note { background: var(--warn-soft); color: var(--text); border-left: 3px solid var(--warn);
+  padding: 8px 10px; border-radius: 6px; font-size: 13.5px; margin-top: 10px; }
+.note b { color: var(--warn); }
+.hidden { display: none !important; }
+mark { background: var(--hl); color: inherit; border-radius: 3px; }
+
+/* 全部快速鍵 */
+.filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.filters button { font: inherit; font-size: 13px; padding: 4px 10px; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--line); background: var(--card); color: var(--text); }
+.filters button.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.all { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--line);
+  border-radius: 12px; overflow: hidden; font-size: 14px; }
+.all th, .all td { text-align: left; padding: 6px 10px; border-top: 1px solid var(--line); }
+.all th { background: var(--kbd-bg); font-weight: 600; }
+.all td:nth-child(2) { color: var(--muted); font-size: 12.5px; white-space: nowrap; }
+.all td:last-child { word-break: break-word; }
+#count { color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>我的 Neovim 手冊</h1>
+    <input id="q" type="search" placeholder="搜尋：例如「檔案樹」「分頁」「sl」「Claude」…（按 / 聚焦）" autocomplete="off">
+    <nav>
+      <a href="#map">畫面地圖</a><a href="#jump">跳視窗</a><a href="#tree">檔案樹</a><a href="#buffer">上方檔名列</a>
+      <a href="#tab">標籤頁</a><a href="#split">分割</a><a href="#find">找檔案</a><a href="#code">程式碼</a>
+      <a href="#edit">編輯</a><a href="#claude">Claude</a><a href="#test">測試偵錯</a><a href="#all">全部按鍵</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+
+<h2 id="map">畫面地圖：先搞懂你在哪一格</h2>
+<p class="lead"><kbd>&lt;leader&gt;</kbd> 就是<b>空格鍵</b>。忘記時按空格停一下，下方會跳出所有可按的鍵（which-key）。</p>
+<div class="map">
+  <div class="pane top"><b>最上方橫條 = 已開的檔案（buffer，不是標籤頁！）</b>
+    <kbd>Shift+h</kbd> 上一個檔案　<kbd>Shift+l</kbd> 下一個檔案　<kbd>&lt;leader&gt;bd</kbd> 關掉這個檔案</div>
+  <div class="pane tree"><b>左：檔案樹（neo-tree）</b>
+    <div>打開／關掉：<kbd>&lt;leader&gt;e</kbd></div>
+    <div>跳去中間：<kbd>Ctrl+l</kbd></div>
+    <div>看說明：<kbd>?</kbd></div></div>
+  <div class="pane edit"><b>中：編輯區</b>
+    <div>跳去左邊檔案樹：<kbd>Ctrl+h</kbd> 或 <kbd>sh</kbd></div>
+    <div>跳去右邊：<kbd>Ctrl+l</kbd> 或 <kbd>sl</kbd></div>
+    <div>這格滿版 ⇄ 還原：<kbd>Ctrl+b</kbd></div></div>
+  <div class="pane claude"><b>右：Claude 側欄</b>
+    <div>開／關：<kbd>Alt+r</kbd></div>
+    <div>跳回中間：<kbd>Ctrl+h</kbd></div>
+    <div>變回 normal mode：連按兩下 <kbd>Esc</kbd></div></div>
+</div>
+
+<h2>我想要⋯</h2>
+<div class="cards">
+
+<section class="card" id="jump" data-kw="視窗 左邊 右邊 中間 選單 側欄 移動 跳 panel window">
+  <h3>在左／中／右之間跳來跳去</h3>
+  <table>
+    <tr><td><kbd>Ctrl+h</kbd> <kbd>Ctrl+l</kbd></td><td>往左／往右一格（<b>在哪一格都能用</b>，最推薦）</td></tr>
+    <tr><td><kbd>Ctrl+j</kbd> <kbd>Ctrl+k</kbd></td><td>往下／往上一格</td></tr>
+    <tr><td><kbd>sh</kbd> <kbd>sl</kbd> <kbd>sj</kbd> <kbd>sk</kbd></td><td>同上（你自訂的），但<b>檔案樹裡不能用</b></td></tr>
+    <tr><td><kbd>Ctrl+w</kbd> 再按 <kbd>w</kbd></td><td>依序輪流跳到下一格</td></tr>
+    <tr><td><kbd>Ctrl+w</kbd> 再按 <kbd>p</kbd></td><td>跳回上一格待過的地方</td></tr>
+  </table>
+  <div class="note"><b>為什麼在檔案樹按 <kbd>sl</kbd> 沒用？</b>
+    因為 <kbd>s</kbd> 在檔案樹裡是「用垂直分割打開檔案」，按下去就立刻執行了。
+    所以從檔案樹回中間，請用 <kbd>Ctrl+l</kbd>。</div>
+</section>
+
+<section class="card" id="tree" data-kw="檔案樹 左邊 選單 neo-tree explorer 新增 刪除 改名 複製 隱藏檔">
+  <h3>左邊檔案樹裡面的操作</h3>
+  <table>
+    <tr><td><kbd>&lt;leader&gt;e</kbd></td><td>打開檔案樹；已開著時再按會<b>關掉</b>（要跳進去用 <kbd>Ctrl+h</kbd>）</td></tr>
+    <tr><td><kbd>&lt;leader&gt;E</kbd></td><td>用目前工作目錄開檔案樹</td></tr>
+    <tr><td><kbd>Enter</kbd> 或 <kbd>l</kbd></td><td>開檔案／展開資料夾</td></tr>
+    <tr><td><kbd>h</kbd></td><td>收起資料夾</td></tr>
+    <tr><td><kbd>z</kbd></td><td>全部資料夾收起來</td></tr>
+    <tr><td><kbd>s</kbd> ／ <kbd>S</kbd> ／ <kbd>t</kbd></td><td>用垂直分割／水平分割／新標籤頁開</td></tr>
+    <tr><td><kbd>P</kbd></td><td>預覽檔案（不真的打開）</td></tr>
+    <tr><td><kbd>a</kbd> ／ <kbd>A</kbd></td><td>新增檔案／新增資料夾（檔名結尾打 <code>/</code> 也會變資料夾）</td></tr>
+    <tr><td><kbd>r</kbd> ／ <kbd>d</kbd></td><td>改名／刪除</td></tr>
+    <tr><td><kbd>y</kbd> <kbd>x</kbd> <kbd>p</kbd></td><td>複製／剪下／貼上檔案</td></tr>
+    <tr><td><kbd>c</kbd> ／ <kbd>m</kbd></td><td>複製到／移動到（打路徑）</td></tr>
+    <tr><td><kbd>Y</kbd></td><td>複製這個檔案的完整路徑</td></tr>
+    <tr><td><kbd>O</kbd></td><td>用系統程式開啟</td></tr>
+    <tr><td><kbd>H</kbd></td><td>顯示／隱藏被收起來的資料夾（<code>node_modules</code>、<code>vendor</code> 等）</td></tr>
+    <tr><td><kbd>/</kbd></td><td>在檔案樹裡搜尋檔名</td></tr>
+    <tr><td><kbd>Backspace</kbd> ／ <kbd>.</kbd></td><td>往上一層／把這個資料夾設為根目錄</td></tr>
+    <tr><td><kbd>R</kbd></td><td>重新整理</td></tr>
+    <tr><td><kbd>?</kbd></td><td>顯示檔案樹所有按鍵</td></tr>
+    <tr><td><kbd>q</kbd></td><td>關掉檔案樹</td></tr>
+  </table>
+</section>
+
+<section class="card" id="buffer" data-kw="buffer 上方 檔名 分頁 tag 切換 關閉 bufferline 檔案">
+  <h3>上方檔名列：切換／關閉已開的檔案</h3>
+  <table>
+    <tr><td><kbd>Shift+h</kbd> ／ <kbd>Shift+l</kbd></td><td>上一個／下一個檔案</td></tr>
+    <tr><td><kbd>[b</kbd> ／ <kbd>]b</kbd></td><td>同上</td></tr>
+    <tr><td><kbd>&lt;leader&gt;,</kbd></td><td>列出已開的檔案，打字挑一個</td></tr>
+    <tr><td><kbd>&lt;leader&gt;bj</kbd></td><td>每個檔名旁出現字母，按字母直接跳</td></tr>
+    <tr><td><kbd>&lt;leader&gt;bb</kbd> 或 <kbd>&lt;leader&gt;`</kbd></td><td>切回上一個看過的檔案</td></tr>
+    <tr><td><kbd>&lt;leader&gt;bd</kbd></td><td>關掉目前檔案（視窗保留）</td></tr>
+    <tr><td><kbd>&lt;leader&gt;bo</kbd></td><td>只留目前這個，其他全關</td></tr>
+    <tr><td><kbd>&lt;leader&gt;bl</kbd> ／ <kbd>&lt;leader&gt;br</kbd></td><td>關掉左邊／右邊全部</td></tr>
+    <tr><td><kbd>&lt;leader&gt;bp</kbd></td><td>釘選這個檔案（<kbd>&lt;leader&gt;bP</kbd> 關掉沒釘選的）</td></tr>
+    <tr><td><kbd>[B</kbd> ／ <kbd>]B</kbd></td><td>把檔名往左／右挪</td></tr>
+  </table>
+  <div class="note"><b>最常搞混：</b>上方那排是「已開的檔案」，不是標籤頁。
+    所以按 <kbd>Tab</kbd> 不會換檔案，換檔案請用 <kbd>Shift+h</kbd> ／ <kbd>Shift+l</kbd>。</div>
+</section>
+
+<section class="card" id="tab" data-kw="標籤頁 tab 分頁 tag 切換 tabnext tabedit">
+  <h3>標籤頁（整組版面）</h3>
+  <table>
+    <tr><td><kbd>Tab</kbd> ／ <kbd>Shift+Tab</kbd></td><td>下一個／上一個標籤頁（自訂）</td></tr>
+    <tr><td><kbd>te</kbd></td><td>開新標籤頁，打檔名再按 <kbd>Enter</kbd>（自訂）</td></tr>
+    <tr><td><kbd>&lt;leader&gt;Tab</kbd> <kbd>Tab</kbd></td><td>開新標籤頁</td></tr>
+    <tr><td><kbd>&lt;leader&gt;Tab</kbd> <kbd>]</kbd> ／ <kbd>[</kbd></td><td>下一個／上一個標籤頁</td></tr>
+    <tr><td><kbd>&lt;leader&gt;Tab</kbd> <kbd>d</kbd></td><td>關掉這個標籤頁</td></tr>
+    <tr><td><kbd>&lt;leader&gt;Tab</kbd> <kbd>o</kbd></td><td>關掉其他標籤頁</td></tr>
+    <tr><td><kbd>gt</kbd> ／ <kbd>gT</kbd></td><td>vim 原生的下一個／上一個標籤頁</td></tr>
+  </table>
+  <div class="note"><b>標籤頁是什麼：</b>一整組視窗排版，不是一個檔案。
+    例如一個標籤頁放前端、另一個放後端，切過去整個版面一起換。
+    只有一個標籤頁時，畫面上看不到標籤列。</div>
+</section>
+
+<section class="card" id="split" data-kw="分割 split 視窗 滿版 zoom 放大 大小">
+  <h3>分割視窗、滿版、調大小</h3>
+  <table>
+    <tr><td><kbd>sv</kbd> 或 <kbd>&lt;leader&gt;|</kbd></td><td>左右分割（自訂／內建）</td></tr>
+    <tr><td><kbd>ss</kbd> 或 <kbd>&lt;leader&gt;-</kbd></td><td>上下分割（自訂／內建）</td></tr>
+    <tr><td><kbd>Ctrl+b</kbd></td><td>目前這格滿版 ⇄ 還原（自訂）</td></tr>
+    <tr><td><kbd>&lt;leader&gt;wd</kbd></td><td>關掉目前這格視窗</td></tr>
+    <tr><td><kbd>Ctrl+←</kbd> <kbd>Ctrl+→</kbd></td><td>視窗變窄／變寬</td></tr>
+    <tr><td><kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd></td><td>視窗變高／變矮</td></tr>
+    <tr><td><kbd>Ctrl+w</kbd> 再按 <kbd>=</kbd></td><td>所有視窗平均分配大小</td></tr>
+    <tr><td><kbd>&lt;leader&gt;uz</kbd></td><td>禪模式（只留中間，專心寫）</td></tr>
+  </table>
+  <div class="note"><b>注意：</b><kbd>Ctrl+b</kbd> 已改成滿版，往上翻頁請用 <kbd>Ctrl+u</kbd>。</div>
+</section>
+
+<section class="card" id="find" data-kw="找 搜尋 檔案 內容 grep picker 開檔 最近 VSCode ctrl+p">
+  <h3>找檔案、搜內容</h3>
+  <table>
+    <tr><td><kbd>&lt;leader&gt;Space</kbd></td><td>用檔名找檔案（像 VSCode 的 Ctrl+P）</td></tr>
+    <tr><td><kbd>&lt;leader&gt;/</kbd></td><td>全專案搜內容（像 VSCode 的 Ctrl+Shift+F）</td></tr>
+    <tr><td><kbd>&lt;leader&gt;fr</kbd></td><td>最近開過的檔案</td></tr>
+    <tr><td><kbd>&lt;leader&gt;sw</kbd></td><td>搜游標所在的字</td></tr>
+    <tr><td><kbd>&lt;leader&gt;sb</kbd></td><td>只在目前檔案搜</td></tr>
+    <tr><td><kbd>&lt;leader&gt;ss</kbd></td><td>跳到這個檔案的函式／類別</td></tr>
+    <tr><td><kbd>&lt;leader&gt;sr</kbd></td><td>全專案搜尋並取代</td></tr>
+    <tr><td><kbd>&lt;leader&gt;sR</kbd></td><td>重開上一次的搜尋結果</td></tr>
+    <tr><td><kbd>&lt;leader&gt;fn</kbd></td><td>開新檔案</td></tr>
+  </table>
+  <div class="note"><b>搜尋視窗裡：</b><kbd>Ctrl+j</kbd>／<kbd>Ctrl+k</kbd> 上下選，
+    <kbd>Enter</kbd> 開啟，<kbd>Ctrl+v</kbd> 分割開、<kbd>Ctrl+t</kbd> 新標籤頁開，
+    <kbd>Alt+p</kbd> 開關預覽，<kbd>Esc</kbd> 按兩次關掉。</div>
+</section>
+
+<section class="card" id="code" data-kw="程式碼 定義 跳 參照 lsp 函式 錯誤 診斷 改名 rename 回上一個位置">
+  <h3>程式碼：跳定義、看錯誤</h3>
+  <table>
+    <tr><td><kbd>gd</kbd></td><td>跳到定義</td></tr>
+    <tr><td><kbd>gr</kbd></td><td>列出誰用到它</td></tr>
+    <tr><td><kbd>gI</kbd> ／ <kbd>gy</kbd></td><td>跳到實作／型別定義</td></tr>
+    <tr><td><kbd>Ctrl+o</kbd> ／ <kbd>Ctrl+i</kbd></td><td><b>跳回剛剛的位置</b>／再跳回來</td></tr>
+    <tr><td><kbd>K</kbd></td><td>看說明文件（hover）</td></tr>
+    <tr><td><kbd>&lt;leader&gt;cr</kbd></td><td>重新命名（全專案一起改）</td></tr>
+    <tr><td><kbd>&lt;leader&gt;ca</kbd></td><td>code action（自動修正建議）</td></tr>
+    <tr><td><kbd>&lt;leader&gt;cf</kbd></td><td>格式化</td></tr>
+    <tr><td><kbd>]d</kbd> ／ <kbd>[d</kbd></td><td>下一個／上一個問題（錯誤或警告）</td></tr>
+    <tr><td><kbd>]e</kbd> ／ <kbd>[e</kbd></td><td>只跳錯誤</td></tr>
+    <tr><td><kbd>&lt;leader&gt;cd</kbd></td><td>顯示這行的錯誤訊息</td></tr>
+    <tr><td><kbd>&lt;leader&gt;xx</kbd></td><td>全部錯誤清單（Trouble）</td></tr>
+  </table>
+</section>
+
+<section class="card" id="edit" data-kw="編輯 註解 存檔 全選 移動行 複製 flash 跳躍 git lazygit 離開">
+  <h3>編輯、存檔、Git、離開</h3>
+  <table>
+    <tr><td><kbd>Ctrl+s</kbd></td><td>存檔</td></tr>
+    <tr><td><kbd>Ctrl+a</kbd></td><td>全選（自訂；原本的「數字 +1」被蓋掉了）</td></tr>
+    <tr><td><kbd>gcc</kbd> ／ 選取後 <kbd>gc</kbd></td><td>註解／取消註解</td></tr>
+    <tr><td><kbd>Alt+j</kbd> ／ <kbd>Alt+k</kbd></td><td>整行往下／往上搬</td></tr>
+    <tr><td><kbd>s</kbd> 再打兩個字</td><td>Flash：畫面上任何地方直接跳過去</td></tr>
+    <tr><td><kbd>u</kbd> ／ <kbd>Ctrl+r</kbd></td><td>復原／重做</td></tr>
+    <tr><td><kbd>Esc</kbd></td><td>離開輸入模式，順便清掉搜尋的黃色標記</td></tr>
+    <tr><td><kbd>&lt;leader&gt;gg</kbd></td><td>lazygit（Git 介面）</td></tr>
+    <tr><td><kbd>&lt;leader&gt;gb</kbd></td><td>這行是誰改的（blame）</td></tr>
+    <tr><td><kbd>Ctrl+/</kbd></td><td>開／關下方終端機</td></tr>
+    <tr><td><kbd>&lt;leader&gt;qq</kbd></td><td>離開 nvim</td></tr>
+  </table>
+</section>
+
+<section class="card" id="claude" data-kw="claude ai 側欄 右邊 終端機 diff">
+  <h3>Claude Code 側欄</h3>
+  <table>
+    <tr><td><kbd>Alt+r</kbd></td><td>開／關 Claude（在側欄裡也能按）</td></tr>
+    <tr><td><kbd>&lt;leader&gt;af</kbd></td><td>跳到 Claude 視窗</td></tr>
+    <tr><td><kbd>Ctrl+h</kbd></td><td>從 Claude 跳回中間</td></tr>
+    <tr><td><kbd>Esc</kbd> <kbd>Esc</kbd>（快速連按）</td><td>變回 normal mode（單按一下會送給 Claude 當中斷）</td></tr>
+    <tr><td><kbd>&lt;leader&gt;ar</kbd> ／ <kbd>&lt;leader&gt;aC</kbd></td><td>接續舊對話／接續上一次對話</td></tr>
+    <tr><td><kbd>&lt;leader&gt;ab</kbd></td><td>把目前檔案丟給 Claude</td></tr>
+    <tr><td>選取後 <kbd>&lt;leader&gt;as</kbd></td><td>把選取的程式碼丟給 Claude</td></tr>
+    <tr><td><kbd>&lt;leader&gt;aa</kbd> ／ <kbd>&lt;leader&gt;ad</kbd></td><td>接受／拒絕 Claude 的修改</td></tr>
+  </table>
+</section>
+
+<section class="card" id="test" data-kw="測試 test neotest 偵錯 debug dap 中斷點 phpunit vitest xdebug">
+  <h3>測試與偵錯</h3>
+  <table>
+    <tr><td><kbd>&lt;leader&gt;tr</kbd></td><td>跑游標所在的那個測試</td></tr>
+    <tr><td><kbd>&lt;leader&gt;tt</kbd> ／ <kbd>&lt;leader&gt;tT</kbd></td><td>跑這個檔案／整個專案的測試</td></tr>
+    <tr><td><kbd>&lt;leader&gt;ts</kbd></td><td>開／關測試清單側欄</td></tr>
+    <tr><td><kbd>&lt;leader&gt;to</kbd></td><td>看測試輸出</td></tr>
+    <tr><td><kbd>&lt;leader&gt;db</kbd></td><td>下中斷點</td></tr>
+    <tr><td><kbd>&lt;leader&gt;dc</kbd></td><td>開始／繼續執行（PHP 選「Listen for Xdebug」）</td></tr>
+    <tr><td><kbd>&lt;leader&gt;dO</kbd> <kbd>&lt;leader&gt;di</kbd> <kbd>&lt;leader&gt;do</kbd></td><td>下一行／進入函式／跳出函式</td></tr>
+    <tr><td><kbd>&lt;leader&gt;du</kbd></td><td>開／關偵錯畫面</td></tr>
+    <tr><td><kbd>&lt;leader&gt;dt</kbd></td><td>結束偵錯</td></tr>
+  </table>
+</section>
+
+<section class="card" data-kw="忘記 說明 help which-key keymap 救命 查">
+  <h3>全忘光時的救命鍵</h3>
+  <table>
+    <tr><td><kbd>Space</kbd> 停一下</td><td>列出所有 <kbd>&lt;leader&gt;</kbd> 開頭的鍵</td></tr>
+    <tr><td><kbd>&lt;leader&gt;sk</kbd></td><td>搜尋所有快速鍵（打中文沒用，打英文如 window、tab）</td></tr>
+    <tr><td><kbd>&lt;leader&gt;?</kbd></td><td>只看目前這個視窗能用的鍵</td></tr>
+    <tr><td>檔案樹裡按 <kbd>?</kbd></td><td>檔案樹專用按鍵</td></tr>
+    <tr><td><kbd>Ctrl+w</kbd> 再按 <kbd>Space</kbd></td><td>視窗操作模式，下方會列出能按的鍵</td></tr>
+  </table>
+</section>
+
+</div>
+
+<h2 id="all">全部快速鍵（從 nvim 自動匯出）</h2>
+<p class="lead">這張表由 <code>./update.sh</code> 產生，最後更新：<span id="updated">—</span>。
+  說明欄是外掛原本的英文描述。檔案樹、LSP（如 <code>gd</code>）這類「只在某種視窗才有」的鍵不在這張表，請看上面的卡片。</p>
+<div class="filters" id="modes"></div>
+<div id="count"></div>
+<table class="all">
+  <thead><tr><th>按鍵</th><th>模式</th><th>說明</th></tr></thead>
+  <tbody id="rows"></tbody>
+</table>
+
+</div>
+
+<script src="keymaps.js"></script>
+<script>
+const KEYS = (window.KEYMAPS || []);
+const ORDER = ["normal", "visual", "insert", "terminal", "operator"];
+const LABEL = { all: "全部", normal: "normal", visual: "visual", insert: "insert", terminal: "terminal", operator: "operator" };
+KEYS.sort((a, b) => ORDER.indexOf(a.mode) - ORDER.indexOf(b.mode) || a.lhs.localeCompare(b.lhs));
+document.getElementById("updated").textContent = window.KEYMAPS_UPDATED || "尚未產生，請執行 ./update.sh";
+
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const nice = lhs => lhs.replace(/^<Space>|^<leader>/, "<leader>").replace(/<Space>/g, " Space ");
+let mode = "all";
+
+const modesEl = document.getElementById("modes");
+["all", ...ORDER].forEach(m => {
+  const b = document.createElement("button");
+  b.textContent = LABEL[m];
+  b.dataset.m = m;
+  b.onclick = () => { mode = m; render(); };
+  modesEl.appendChild(b);
+});
+
+function render() {
+  const q = document.getElementById("q").value.trim().toLowerCase();
+  modesEl.querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.m === mode));
+
+  // 情境卡片：整張卡片比對標題、內容與關鍵字
+  document.querySelectorAll(".card").forEach(card => {
+    const text = (card.textContent + " " + (card.dataset.kw || "")).toLowerCase();
+    card.classList.toggle("hidden", q !== "" && !text.includes(q));
+  });
+
+  const rows = KEYS.filter(k => (mode === "all" || k.mode === mode) &&
+    (q === "" || (nice(k.lhs) + " " + k.lhs + " " + k.desc).toLowerCase().includes(q)));
+  document.getElementById("rows").innerHTML = rows.map(k =>
+    `<tr><td><kbd>${esc(nice(k.lhs))}</kbd></td><td>${k.mode}</td><td>${esc(k.desc)}</td></tr>`).join("");
+  document.getElementById("count").textContent = `${rows.length} / ${KEYS.length} 個`;
+}
+
+document.getElementById("q").addEventListener("input", render);
+document.addEventListener("keydown", e => {
+  if (e.key === "/" && document.activeElement.id !== "q") { e.preventDefault(); document.getElementById("q").focus(); }
+  if (e.key === "Escape") { document.getElementById("q").value = ""; render(); document.getElementById("q").blur(); }
+});
+render();
+</script>
+</body>
+</html>
