@@ -68,6 +68,7 @@ code { font: 13px ui-monospace, Menlo, monospace; background: var(--kbd-bg); pad
 .note { background: var(--warn-soft); color: var(--text); border-left: 3px solid var(--warn);
   padding: 8px 10px; border-radius: 6px; font-size: 13.5px; margin-top: 10px; }
 .note b { color: var(--warn); }
+.legend { margin-bottom: 14px; }
 .hidden { display: none !important; }
 mark { background: var(--hl); color: inherit; border-radius: 3px; }
 
@@ -312,8 +313,33 @@ mark { background: var(--hl); color: inherit; border-radius: 3px; }
 
 <h2 id="all">全部快速鍵（從 nvim 自動匯出）</h2>
 <p class="lead">這張表由 <code>./update.sh</code> 產生，最後更新：<span id="updated">—</span>。
-  說明欄已翻成中文（滑鼠移上去看英文原文），搜尋中英文都找得到。
+  按鍵欄已換成實際要按的寫法（<kbd>Alt+j</kbd> 而不是 <code>&lt;M-j&gt;</code>），說明欄已翻成中文；
+  兩欄都可以把滑鼠移上去看原文，搜尋新舊寫法都找得到。
   檔案樹、LSP（如 <code>gd</code>）這類「只在某種視窗才有」的鍵不在這張表，請看上面的卡片。</p>
+<section class="card legend">
+  <h3>看到 <kbd>&lt;M-j&gt;</kbd> 這種寫法時的對照表</h3>
+  <p class="lead">下面的表格已經直接寫成 <kbd>Alt+j</kbd> 了。
+    但你在 nvim 裡按 <kbd>&lt;leader&gt;sk</kbd>、或翻 <code>~/.config/nvim</code> 設定檔時，看到的還是這種原始寫法。</p>
+  <table>
+    <tr><td><kbd>&lt;M-j&gt;</kbd></td><td><b>Alt + j</b>。<code>M</code> 是 Meta 鍵，在 Linux／Windows 就是 <kbd>Alt</kbd></td></tr>
+    <tr><td><kbd>&lt;C-j&gt;</kbd></td><td><b>Ctrl + j</b>。大小寫不影響，<kbd>&lt;C-J&gt;</kbd> 一樣是按 <kbd>Ctrl</kbd>+<kbd>j</kbd>（不用加 Shift）</td></tr>
+    <tr><td><kbd>&lt;S-Tab&gt;</kbd></td><td><b>Shift + Tab</b>。<code>S</code> 是 Shift</td></tr>
+    <tr><td><kbd>&lt;leader&gt;</kbd></td><td><b>空格鍵</b>。按了停一下，下方會列出接著能按的鍵</td></tr>
+    <tr><td><kbd>Space</kbd></td><td>出現在中間時（例如 <kbd>&lt;leader&gt; Space</kbd>）是真的再按一次<b>空格鍵</b></td></tr>
+    <tr><td><kbd>&lt;CR&gt;</kbd></td><td><b>Enter</b>（carriage return）</td></tr>
+    <tr><td><kbd>&lt;BS&gt;</kbd></td><td><b>Backspace</b> 退格鍵</td></tr>
+    <tr><td><kbd>&lt;Esc&gt;</kbd> <kbd>&lt;Tab&gt;</kbd></td><td>就是鍵盤上的 <kbd>Esc</kbd>、<kbd>Tab</kbd></td></tr>
+    <tr><td><kbd>&lt;Up&gt;</kbd> <kbd>&lt;Down&gt;</kbd> <kbd>&lt;Left&gt;</kbd> <kbd>&lt;Right&gt;</kbd></td><td><b>方向鍵</b>上、下、左、右那四顆（表格裡寫成 <kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd>）</td></tr>
+    <tr><td><kbd>&lt;C-/&gt;</kbd></td><td><b>Ctrl + 斜線</b>（<code>/</code> 那顆）</td></tr>
+    <tr><td><kbd>&lt;lt&gt;</kbd></td><td><b><code>&lt;</code> 這個符號本身</b>，不是修飾鍵</td></tr>
+    <tr><td><kbd>&lt;C-W&gt;&lt;C-D&gt;</kbd></td><td><b>連按兩組</b>：先 <kbd>Ctrl</kbd>+<kbd>w</kbd> 放開，再 <kbd>Ctrl</kbd>+<kbd>d</kbd>（表格裡寫成 <kbd>Ctrl+w Ctrl+d</kbd>，<b>中間有空格就是分開按</b>）</td></tr>
+    <tr><td><kbd>&lt;Plug&gt;(…)</kbd></td><td>出現在<b>說明欄</b>時，代表那是外掛內部的名字，不是你要按的鍵</td></tr>
+  </table>
+  <div class="note"><b>Alt 按下去沒反應？</b>改成<b>先按一下 <kbd>Esc</kbd>、放開，再按那個字母</b>。
+    終端機把「Esc 之後接一個鍵」當成跟 Alt 同樣的意思。
+    Mac 要先到終端機設定把 <kbd>Option</kbd> 當成 Meta，否則 <kbd>Alt</kbd>+<kbd>j</kbd> 會打出奇怪符號。</div>
+  <div class="note"><b>兩個字母連著寫</b>（例如 <kbd>sl</kbd>、<kbd>te</kbd>、<kbd>gcc</kbd>）是<b>依序快速按</b>，不是一起按。</div>
+</section>
 <div class="filters" id="modes"></div>
 <div id="count"></div>
 <table class="all">
@@ -334,7 +360,26 @@ KEYS.sort((a, b) => ORDER.indexOf(a.mode) - ORDER.indexOf(b.mode) || a.lhs.local
 document.getElementById("updated").textContent = window.KEYMAPS_UPDATED || "尚未產生，請執行 ./update.sh";
 
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-const nice = lhs => lhs.replace(/^<Space>|^<leader>/, "<leader>").replace(/<Space>/g, " Space ");
+const MOD = { C: "Ctrl", M: "Alt", S: "Shift", A: "Alt", D: "Cmd" };
+const KEYNAME = { CR: "Enter", Esc: "Esc", BS: "Backspace", Del: "Delete", Tab: "Tab", Space: "Space",
+  Up: "\u2191", Down: "\u2193", Left: "\u2190", Right: "\u2192", lt: "<", leader: "<leader>" };
+// <M-j> → Alt+j、<Down> → ↓，讓表格直接顯示「實際要按什麼」；原文留在 title
+function nice(lhs) {
+  const tokens = (lhs.replace(/^<Space>/, "<leader>").match(/<[^<>]+>|[\s\S]/g) || []).map(t => {
+    const mod = t.match(/^<([CMSAD])-(.+)>$/);
+    if (mod) {
+      const k = mod[2];
+      return MOD[mod[1]] + "+" + (KEYNAME[k] || (k.length === 1 ? k.toLowerCase() : k));
+    }
+    const named = t.match(/^<(.+)>$/);
+    return named && KEYNAME[named[1]] ? KEYNAME[named[1]] : t;
+  });
+  return tokens.reduce((out, t, i) => {
+    const prev = tokens[i - 1];
+    const gap = i > 0 && ((prev.length > 1 && prev !== "<leader>") || t.length > 1);
+    return out + (gap ? " " : "") + t;
+  }, "");
+}
 let mode = "all";
 
 const modesEl = document.getElementById("modes");
@@ -351,7 +396,7 @@ function render() {
   modesEl.querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.m === mode));
 
   // 情境卡片：整張卡片比對標題、內容與關鍵字
-  document.querySelectorAll(".card").forEach(card => {
+  document.querySelectorAll(".card:not(.legend)").forEach(card => {
     const text = (card.textContent + " " + (card.dataset.kw || "")).toLowerCase();
     card.classList.toggle("hidden", q !== "" && !text.includes(q));
   });
@@ -359,7 +404,7 @@ function render() {
   const rows = KEYS.filter(k => (mode === "all" || k.mode === mode) &&
     (q === "" || (nice(k.lhs) + " " + k.lhs + " " + k.desc + " " + (ZH[k.desc] || "")).toLowerCase().includes(q)));
   document.getElementById("rows").innerHTML = rows.map(k =>
-    `<tr><td><kbd>${esc(nice(k.lhs))}</kbd></td><td>${k.mode}</td>` +
+    `<tr><td title="${esc(k.lhs)}"><kbd>${esc(nice(k.lhs))}</kbd></td><td>${k.mode}</td>` +
     `<td title="${esc(k.desc)}">${esc(ZH[k.desc] || k.desc)}</td></tr>`).join("");
   document.getElementById("count").textContent = `${rows.length} / ${KEYS.length} 個`;
 }
