@@ -161,7 +161,7 @@ mark { background: var(--hl); color: inherit; border-radius: 3px; }
   </table>
 </section>
 
-<section class="card" id="buffer" data-kw="buffer 上方 檔名 分頁 tag 切換 關閉 bufferline 檔案">
+<section class="card" id="buffer" data-kw="buffer 上方 檔名 分頁 tag 切換 關閉 bufferline 檔案 黃點 未存檔 圖示">
   <h3>上方檔名列：切換／關閉已開的檔案</h3>
   <table>
     <tr><td><kbd>Shift+h</kbd> ／ <kbd>Shift+l</kbd></td><td>上一個／下一個檔案</td></tr>
@@ -177,6 +177,8 @@ mark { background: var(--hl); color: inherit; border-radius: 3px; }
   </table>
   <div class="note"><b>最常搞混：</b>上方那排是「已開的檔案」，不是標籤頁。
     所以按 <kbd>Tab</kbd> 不會換檔案，換檔案請用 <kbd>Shift+h</kbd> ／ <kbd>Shift+l</kbd>。</div>
+  <div class="note"><b>檔名旁的圖示：</b>黃點 <code>●</code> 或 <code>[+]</code> = 改過還沒存檔；
+    紅色圖示 = 這個檔案有錯誤，看內容請見「程式碼」卡片。</div>
 </section>
 
 <section class="card" id="tab" data-kw="標籤頁 tab 分頁 tag 切換 tabnext tabedit">
@@ -223,12 +225,12 @@ mark { background: var(--hl); color: inherit; border-radius: 3px; }
     <tr><td><kbd>&lt;leader&gt;sR</kbd></td><td>重開上一次的搜尋結果</td></tr>
     <tr><td><kbd>&lt;leader&gt;fn</kbd></td><td>開新檔案</td></tr>
   </table>
-  <div class="note"><b>搜尋視窗裡：</b><kbd>Ctrl+j</kbd>／<kbd>Ctrl+k</kbd> 上下選，
-    <kbd>Enter</kbd> 開啟，<kbd>Ctrl+v</kbd> 分割開、<kbd>Ctrl+t</kbd> 新標籤頁開，
-    <kbd>Alt+p</kbd> 開關預覽，<kbd>Esc</kbd> 按兩次關掉。</div>
+  <div class="note"><b>搜尋視窗裡（fzf-lua）：</b><kbd>Ctrl+j</kbd>／<kbd>Ctrl+k</kbd> 上下選，
+    <kbd>Enter</kbd> 開啟，<kbd>Ctrl+v</kbd> 分割開、<kbd>Ctrl+t</kbd> 丟進 Trouble 清單，
+    <kbd>F4</kbd> 開關預覽，<kbd>Alt+i</kbd> 顯示被 .gitignore 忽略的檔案，<kbd>Esc</kbd> 按一次就關掉。</div>
 </section>
 
-<section class="card" id="code" data-kw="程式碼 定義 跳 參照 lsp 函式 錯誤 診斷 改名 rename 回上一個位置">
+<section class="card" id="code" data-kw="程式碼 定義 跳 參照 lsp 函式 錯誤 診斷 警告 trouble 紅色 改名 rename 回上一個位置">
   <h3>程式碼：跳定義、看錯誤</h3>
   <table>
     <tr><td><kbd>gd</kbd></td><td>跳到定義</td></tr>
@@ -242,8 +244,11 @@ mark { background: var(--hl); color: inherit; border-radius: 3px; }
     <tr><td><kbd>]d</kbd> ／ <kbd>[d</kbd></td><td>下一個／上一個問題（錯誤或警告）</td></tr>
     <tr><td><kbd>]e</kbd> ／ <kbd>[e</kbd></td><td>只跳錯誤</td></tr>
     <tr><td><kbd>&lt;leader&gt;cd</kbd></td><td>顯示這行的錯誤訊息</td></tr>
-    <tr><td><kbd>&lt;leader&gt;xx</kbd></td><td>全部錯誤清單（Trouble）</td></tr>
+    <tr><td><kbd>&lt;leader&gt;xX</kbd></td><td>目前檔案的錯誤清單（Trouble，再按一次關）</td></tr>
+    <tr><td><kbd>&lt;leader&gt;xx</kbd></td><td>所有開著的檔案的錯誤清單（Trouble）</td></tr>
+    <tr><td><kbd>&lt;leader&gt;sd</kbd></td><td>用搜尋視窗列出錯誤，可打字篩選</td></tr>
   </table>
+  <div class="note"><b>常用做法：</b>先 <kbd>]e</kbd> 跳到錯誤，再 <kbd>&lt;leader&gt;cd</kbd> 看訊息。</div>
 </section>
 
 <section class="card" id="edit" data-kw="編輯 註解 存檔 全選 移動行 複製 flash 跳躍 git lazygit 離開">
@@ -257,7 +262,7 @@ mark { background: var(--hl); color: inherit; border-radius: 3px; }
     <tr><td><kbd>u</kbd> ／ <kbd>Ctrl+r</kbd></td><td>復原／重做</td></tr>
     <tr><td><kbd>Esc</kbd></td><td>離開輸入模式，順便清掉搜尋的黃色標記</td></tr>
     <tr><td><kbd>&lt;leader&gt;gg</kbd></td><td>lazygit（Git 介面）</td></tr>
-    <tr><td><kbd>&lt;leader&gt;gb</kbd></td><td>這行是誰改的（blame）</td></tr>
+    <tr><td><kbd>&lt;leader&gt;gb</kbd></td><td>這行是誰改的（blame）；游標所在行尾也會自動顯示作者、日期、commit 訊息</td></tr>
     <tr><td><kbd>Ctrl+/</kbd></td><td>開／關下方終端機</td></tr>
     <tr><td><kbd>&lt;leader&gt;qq</kbd></td><td>離開 nvim</td></tr>
   </table>
