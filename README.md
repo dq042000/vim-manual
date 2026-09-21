@@ -17,5 +17,6 @@
 | ------------------ | ----------------------------------------------- |
 | `index.html`       | 手冊頁面                                        |
 | `keymaps.js`       | 自動產生的快速鍵資料，不要手改                  |
+| `desc-zh.js`       | 說明欄的中文翻譯對照表，手動維護                |
 | `update.sh`        | 以 `nvim --headless` 執行 `dump-keymaps.lua`    |
 | `dump-keymaps.lua` | 讀取 `nvim_get_keymap()` 並寫出 `keymaps.js`    |

@@ -312,7 +312,8 @@ mark { background: var(--hl); color: inherit; border-radius: 3px; }
 
 <h2 id="all">全部快速鍵（從 nvim 自動匯出）</h2>
 <p class="lead">這張表由 <code>./update.sh</code> 產生，最後更新：<span id="updated">—</span>。
-  說明欄是外掛原本的英文描述。檔案樹、LSP（如 <code>gd</code>）這類「只在某種視窗才有」的鍵不在這張表，請看上面的卡片。</p>
+  說明欄已翻成中文（滑鼠移上去看英文原文），搜尋中英文都找得到。
+  檔案樹、LSP（如 <code>gd</code>）這類「只在某種視窗才有」的鍵不在這張表，請看上面的卡片。</p>
 <div class="filters" id="modes"></div>
 <div id="count"></div>
 <table class="all">
@@ -323,8 +324,10 @@ mark { background: var(--hl); color: inherit; border-radius: 3px; }
 </div>
 
 <script src="keymaps.js"></script>
+<script src="desc-zh.js"></script>
 <script>
 const KEYS = (window.KEYMAPS || []);
+const ZH = (window.DESC_ZH || {});
 const ORDER = ["normal", "visual", "insert", "terminal", "operator"];
 const LABEL = { all: "全部", normal: "normal", visual: "visual", insert: "insert", terminal: "terminal", operator: "operator" };
 KEYS.sort((a, b) => ORDER.indexOf(a.mode) - ORDER.indexOf(b.mode) || a.lhs.localeCompare(b.lhs));
@@ -354,9 +357,10 @@ function render() {
   });
 
   const rows = KEYS.filter(k => (mode === "all" || k.mode === mode) &&
-    (q === "" || (nice(k.lhs) + " " + k.lhs + " " + k.desc).toLowerCase().includes(q)));
+    (q === "" || (nice(k.lhs) + " " + k.lhs + " " + k.desc + " " + (ZH[k.desc] || "")).toLowerCase().includes(q)));
   document.getElementById("rows").innerHTML = rows.map(k =>
-    `<tr><td><kbd>${esc(nice(k.lhs))}</kbd></td><td>${k.mode}</td><td>${esc(k.desc)}</td></tr>`).join("");
+    `<tr><td><kbd>${esc(nice(k.lhs))}</kbd></td><td>${k.mode}</td>` +
+    `<td title="${esc(k.desc)}">${esc(ZH[k.desc] || k.desc)}</td></tr>`).join("");
   document.getElementById("count").textContent = `${rows.length} / ${KEYS.length} 個`;
 }
 
