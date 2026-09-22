@@ -140,7 +140,7 @@ mark { background: var(--hl); color: inherit; border-radius: 3px; }
 <section class="card" id="tree" data-kw="檔案樹 左邊 選單 neo-tree explorer 新增 刪除 改名 複製 隱藏檔">
   <h3>左邊檔案樹裡面的操作</h3>
   <table>
-    <tr><td><kbd>&lt;leader&gt;e</kbd></td><td>打開檔案樹；已開著時再按會<b>關掉</b>（要跳進去用 <kbd>Ctrl+h</kbd>）</td></tr>
+    <tr><td><kbd>&lt;leader&gt;e</kbd></td><td>打開檔案樹；已開著時再按會<b>關掉</b>（要跳進去用 <kbd>Ctrl+h</kbd>）。<br>例外：目前顯示的是 git 改動清單時，這個鍵會切回一般檔案列表</td></tr>
     <tr><td><kbd>&lt;leader&gt;E</kbd></td><td>用目前工作目錄開檔案樹</td></tr>
     <tr><td><kbd>Enter</kbd> 或 <kbd>l</kbd></td><td>開檔案／展開資料夾</td></tr>
     <tr><td><kbd>h</kbd></td><td>收起資料夾</td></tr>
@@ -275,7 +275,7 @@ mark { background: var(--hl); color: inherit; border-radius: 3px; }
   <table>
     <tr><td><kbd>&lt;leader&gt;gg</kbd></td><td><b>lazygit</b>（最常用；專案根目錄）</td></tr>
     <tr><td><kbd>&lt;leader&gt;gG</kbd></td><td>lazygit（目前工作目錄）</td></tr>
-    <tr><td><kbd>&lt;leader&gt;ge</kbd></td><td>用左邊檔案樹列出有改動的檔案</td></tr>
+    <tr><td><kbd>&lt;leader&gt;ge</kbd></td><td>用左邊檔案樹列出有改動的檔案（再按一次關掉）</td></tr>
     <tr><td><kbd>&lt;leader&gt;gs</kbd></td><td>改動檔案清單，右邊看 diff</td></tr>
     <tr><td><kbd>&lt;leader&gt;gd</kbd></td><td>改動檔案清單，另一種排版</td></tr>
     <tr><td><kbd>&lt;leader&gt;gS</kbd></td><td>列出 stash</td></tr>
@@ -288,6 +288,12 @@ mark { background: var(--hl); color: inherit; border-radius: 3px; }
   <div class="note"><b>commit 清單裡的 <kbd>Enter</kbd> 是 checkout 那個 commit</b>，不是開起來看，小心。
     只想複製 hash 按 <kbd>Ctrl+y</kbd>，想看改了哪些檔案按 <kbd>Ctrl+d</kbd>。</div>
   <div class="note"><kbd>&lt;leader&gt;gs</kbd> 的清單裡，<kbd>→</kbd> 是 stage、<kbd>←</kbd> 是 unstage、<kbd>Ctrl+x</kbd> 是丟棄改動。</div>
+  <div class="note"><b><kbd>&lt;leader&gt;ge</kbd> 之後怎麼回到原狀：</b>
+    想關掉檔案樹就再按一次 <kbd>&lt;leader&gt;ge</kbd>（或在樹裡按 <kbd>q</kbd>）；
+    想變回一般的檔案列表按 <kbd>&lt;leader&gt;e</kbd>；
+    只想把游標移回程式碼、檔案樹留著就按 <kbd>sl</kbd>。
+    這時的 <kbd>&lt;leader&gt;e</kbd> 是<b>切換</b>而不是關閉，它會把 git 清單換成一般檔案樹。
+    在檔案樹裡按 <kbd>&lt;</kbd> 和 <kbd>&gt;</kbd> 可以循環三種清單：一般檔案 → 開著的 buffer → git 改動。</div>
 
   <h3>改動區塊（左邊那條彩色直線）</h3>
   <table>
