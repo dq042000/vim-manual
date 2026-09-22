@@ -94,7 +94,7 @@ mark { background: var(--hl); color: inherit; border-radius: 3px; }
     <nav>
       <a href="#map">畫面地圖</a><a href="#jump">跳視窗</a><a href="#tree">檔案樹</a><a href="#buffer">上方檔名列</a>
       <a href="#tab">標籤頁</a><a href="#split">分割</a><a href="#find">找檔案</a><a href="#code">程式碼</a>
-      <a href="#edit">編輯</a><a href="#claude">Claude</a><a href="#test">測試偵錯</a><a href="#all">全部按鍵</a>
+      <a href="#edit">編輯</a><a href="#git">Git</a><a href="#claude">Claude</a><a href="#test">測試偵錯</a><a href="#all">全部按鍵</a>
     </nav>
   </div>
 </header>
@@ -229,6 +229,9 @@ mark { background: var(--hl); color: inherit; border-radius: 3px; }
   <div class="note"><b>搜尋視窗裡（fzf-lua）：</b><kbd>Ctrl+j</kbd>／<kbd>Ctrl+k</kbd> 上下選，
     <kbd>Enter</kbd> 開啟，<kbd>Ctrl+v</kbd> 分割開、<kbd>Ctrl+t</kbd> 丟進 Trouble 清單，
     <kbd>F4</kbd> 開關預覽，<kbd>Alt+i</kbd> 顯示被 .gitignore 忽略的檔案，<kbd>Esc</kbd> 按一次就關掉。</div>
+  <div class="note"><b>右邊預覽區只能捲，游標跳不進去。</b><kbd>Shift+↓</kbd>／<kbd>Shift+↑</kbd> 捲一頁，
+    <kbd>Alt+Shift+↓</kbd>／<kbd>Alt+Shift+↑</kbd> 捲一行，<kbd>F3</kbd> 開關自動換行。
+    因為那塊是 fzf 這個程式自己畫的文字，不是獨立的 Neovim 視窗。</div>
 </section>
 
 <section class="card" id="code" data-kw="程式碼 定義 跳 參照 lsp 函式 錯誤 診斷 警告 trouble 紅色 改名 rename 回上一個位置">
@@ -252,8 +255,8 @@ mark { background: var(--hl); color: inherit; border-radius: 3px; }
   <div class="note"><b>常用做法：</b>先 <kbd>]e</kbd> 跳到錯誤，再 <kbd>&lt;leader&gt;cd</kbd> 看訊息。</div>
 </section>
 
-<section class="card" id="edit" data-kw="編輯 註解 存檔 全選 移動行 複製 flash 跳躍 git lazygit 離開">
-  <h3>編輯、存檔、Git、離開</h3>
+<section class="card" id="edit" data-kw="編輯 註解 存檔 全選 移動行 複製 flash 跳躍 離開">
+  <h3>編輯、存檔、離開</h3>
   <table>
     <tr><td><kbd>Ctrl+s</kbd></td><td>存檔</td></tr>
     <tr><td><kbd>Ctrl+a</kbd></td><td>全選（自訂；原本的「數字 +1」被蓋掉了）</td></tr>
@@ -262,11 +265,44 @@ mark { background: var(--hl); color: inherit; border-radius: 3px; }
     <tr><td><kbd>s</kbd> 再打兩個字</td><td>Flash：畫面上任何地方直接跳過去</td></tr>
     <tr><td><kbd>u</kbd> ／ <kbd>Ctrl+r</kbd></td><td>復原／重做</td></tr>
     <tr><td><kbd>Esc</kbd></td><td>離開輸入模式，順便清掉搜尋的黃色標記</td></tr>
-    <tr><td><kbd>&lt;leader&gt;gg</kbd></td><td>lazygit（Git 介面）</td></tr>
-    <tr><td><kbd>&lt;leader&gt;gb</kbd></td><td>這行是誰改的（blame）；游標所在行尾也會自動顯示作者、日期、commit 訊息</td></tr>
     <tr><td><kbd>Ctrl+/</kbd></td><td>開／關下方終端機</td></tr>
     <tr><td><kbd>&lt;leader&gt;qq</kbd></td><td>離開 nvim</td></tr>
   </table>
+</section>
+
+<section class="card" id="git" data-kw="git lazygit commit 歷史 log blame diff stash hunk 改動 區塊 stage 還原 reset gitlab github 瀏覽器 gitsigns 誰改的">
+  <h3>Git：所有 git 按鍵都在這裡</h3>
+  <table>
+    <tr><td><kbd>&lt;leader&gt;gg</kbd></td><td><b>lazygit</b>（最常用；專案根目錄）</td></tr>
+    <tr><td><kbd>&lt;leader&gt;gG</kbd></td><td>lazygit（目前工作目錄）</td></tr>
+    <tr><td><kbd>&lt;leader&gt;ge</kbd></td><td>用左邊檔案樹列出有改動的檔案</td></tr>
+    <tr><td><kbd>&lt;leader&gt;gs</kbd></td><td>改動檔案清單，右邊看 diff</td></tr>
+    <tr><td><kbd>&lt;leader&gt;gd</kbd></td><td>改動檔案清單，另一種排版</td></tr>
+    <tr><td><kbd>&lt;leader&gt;gS</kbd></td><td>列出 stash</td></tr>
+    <tr><td><kbd>&lt;leader&gt;gl</kbd></td><td>整個 repo 的 commit 歷史</td></tr>
+    <tr><td><kbd>&lt;leader&gt;gL</kbd></td><td>同上，但<b>預覽區可以把游標移進去</b>（按 <kbd>Alt+w</kbd> 切換焦點）</td></tr>
+    <tr><td><kbd>&lt;leader&gt;gf</kbd></td><td>只看目前這個檔案的 commit 歷史</td></tr>
+    <tr><td><kbd>&lt;leader&gt;gb</kbd></td><td>這行是誰改的（blame）</td></tr>
+    <tr><td><kbd>&lt;leader&gt;gB</kbd> ／ <kbd>&lt;leader&gt;gY</kbd></td><td>用瀏覽器開這行的 GitLab／GitHub 頁面／只複製網址</td></tr>
+  </table>
+  <div class="note"><b>commit 清單裡的 <kbd>Enter</kbd> 是 checkout 那個 commit</b>，不是開起來看，小心。
+    只想複製 hash 按 <kbd>Ctrl+y</kbd>，想看改了哪些檔案按 <kbd>Ctrl+d</kbd>。</div>
+  <div class="note"><kbd>&lt;leader&gt;gs</kbd> 的清單裡，<kbd>→</kbd> 是 stage、<kbd>←</kbd> 是 unstage、<kbd>Ctrl+x</kbd> 是丟棄改動。</div>
+
+  <h3>改動區塊（左邊那條彩色直線）</h3>
+  <table>
+    <tr><td><kbd>]h</kbd> ／ <kbd>[h</kbd></td><td>跳到下一個／上一個改動</td></tr>
+    <tr><td><kbd>]H</kbd> ／ <kbd>[H</kbd></td><td>跳到最後一個／第一個改動</td></tr>
+    <tr><td><kbd>&lt;leader&gt;ghp</kbd></td><td>就地展開這塊改動的 diff</td></tr>
+    <tr><td><kbd>&lt;leader&gt;ghs</kbd> ／ <kbd>&lt;leader&gt;ghr</kbd></td><td>stage／還原這塊改動（先選取可以只處理幾行）</td></tr>
+    <tr><td><kbd>&lt;leader&gt;ghS</kbd> ／ <kbd>&lt;leader&gt;ghR</kbd></td><td>stage／還原整個檔案</td></tr>
+    <tr><td><kbd>&lt;leader&gt;ghu</kbd></td><td>取消上一次的 stage</td></tr>
+    <tr><td><kbd>&lt;leader&gt;ghb</kbd> ／ <kbd>&lt;leader&gt;ghB</kbd></td><td>這一行的完整 blame／整個檔案的 blame</td></tr>
+    <tr><td><kbd>&lt;leader&gt;ghd</kbd> ／ <kbd>&lt;leader&gt;ghD</kbd></td><td>開分割視窗和 index／上一個 commit 比對</td></tr>
+    <tr><td><kbd>dih</kbd></td><td>把一塊改動整個刪掉（<kbd>ih</kbd> 是「一塊改動」這個範圍）</td></tr>
+  </table>
+  <div class="note">這組鍵只在 git repo 裡的檔案有效，所以下面「全部快速鍵」那張表查不到它們。
+    游標所在行尾自動顯示的作者、日期、commit 訊息也是這個套件（gitsigns）做的。</div>
 </section>
 
 <section class="card" id="claude" data-kw="claude ai 側欄 右邊 終端機 diff">
