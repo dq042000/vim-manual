@@ -94,7 +94,7 @@ mark { background: var(--hl); color: inherit; border-radius: 3px; }
     <nav>
       <a href="#map">畫面地圖</a><a href="#jump">跳視窗</a><a href="#tree">檔案樹</a><a href="#buffer">上方檔名列</a>
       <a href="#tab">標籤頁</a><a href="#split">分割</a><a href="#find">找檔案</a><a href="#code">程式碼</a>
-      <a href="#edit">編輯</a><a href="#git">Git</a><a href="#claude">Claude</a><a href="#test">測試偵錯</a><a href="#all">全部按鍵</a>
+      <a href="#edit">編輯</a><a href="#markdown">Markdown</a><a href="#git">Git</a><a href="#claude">Claude</a><a href="#test">測試偵錯</a><a href="#all">全部按鍵</a>
     </nav>
   </div>
 </header>
@@ -268,6 +268,18 @@ mark { background: var(--hl); color: inherit; border-radius: 3px; }
     <tr><td><kbd>Ctrl+/</kbd></td><td>開／關下方終端機</td></tr>
     <tr><td><kbd>&lt;leader&gt;qq</kbd></td><td>離開 nvim</td></tr>
   </table>
+</section>
+
+<section class="card" id="markdown" data-kw="markdown md 預覽 preview 瀏覽器 渲染 render readme 文件 筆記">
+  <h3>Markdown：預覽 .md 檔</h3>
+  <table>
+    <tr><td>（不用按鍵）</td><td>打開 <code>.md</code> 檔就自動美化標題、清單、程式碼區塊</td></tr>
+    <tr><td><kbd>&lt;leader&gt;cp</kbd></td><td>在瀏覽器開／關即時預覽，邊打字邊同步（再按一次關）</td></tr>
+    <tr><td><code>:MarkdownPreview</code> ／ <code>:MarkdownPreviewStop</code></td><td>同上，指令版</td></tr>
+  </table>
+  <div class="note">自動美化是 render-markdown.nvim 做的，游標移到哪一行，那一行就變回原始語法方便你編輯，移開又變回美化樣子。</div>
+  <div class="note"><kbd>&lt;leader&gt;cp</kbd> 只在 <code>.md</code> 檔有效，所以下面「全部快速鍵」那張表查不到它。
+    第一次按沒反應時，在 nvim 裡執行 <code>:Lazy build markdown-preview.nvim</code> 補裝。</div>
 </section>
 
 <section class="card" id="git" data-kw="git lazygit commit 歷史 log blame diff stash hunk 改動 區塊 stage 還原 reset gitlab github 瀏覽器 gitsigns 誰改的">
