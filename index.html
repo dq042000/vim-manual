@@ -213,7 +213,7 @@ mark { background: var(--hl); color: inherit; border-radius: 3px; }
   <div class="note"><b>注意：</b><kbd>Ctrl+b</kbd> 已改成滿版，往上翻頁請用 <kbd>Ctrl+u</kbd>。</div>
 </section>
 
-<section class="card" id="find" data-kw="找 搜尋 檔案 內容 grep picker 開檔 最近 VSCode ctrl+p">
+<section class="card" id="find" data-kw="找 搜尋 檔案 內容 grep picker 開檔 最近 VSCode ctrl+p 路徑 :e 中文檔名 gf 補全">
   <h3>找檔案、搜內容</h3>
   <table>
     <tr><td><kbd>&lt;leader&gt;Space</kbd></td><td>用檔名找檔案（像 VSCode 的 Ctrl+P）</td></tr>
@@ -225,6 +225,9 @@ mark { background: var(--hl); color: inherit; border-radius: 3px; }
     <tr><td><kbd>&lt;leader&gt;sr</kbd></td><td>全專案搜尋並取代</td></tr>
     <tr><td><kbd>&lt;leader&gt;sR</kbd></td><td>重開上一次的搜尋結果</td></tr>
     <tr><td><kbd>&lt;leader&gt;fn</kbd></td><td>開新檔案</td></tr>
+    <tr><td><kbd>:e docs/issues/676/04-驗收清單.md</kbd></td><td>知道路徑時直接打開（路徑從開 nvim 的資料夾算起）</td></tr>
+    <tr><td><kbd>:e docs/issues/676/04</kbd> 再按 <kbd>Tab</kbd></td><td>只打前面，剩下交給 Tab 補完，中文檔名不用切輸入法</td></tr>
+    <tr><td><kbd>gf</kbd></td><td>游標停在畫面上的路徑文字時，直接打開那個檔案</td></tr>
   </table>
   <div class="note"><b>搜尋視窗裡（fzf-lua）：</b><kbd>Ctrl+j</kbd>／<kbd>Ctrl+k</kbd> 上下選，
     <kbd>Enter</kbd> 開啟，<kbd>Ctrl+v</kbd> 分割開、<kbd>Ctrl+t</kbd> 丟進 Trouble 清單，
