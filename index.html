@@ -304,6 +304,12 @@ mark { background: var(--hl); color: inherit; border-radius: 3px; }
   </table>
   <div class="note"><b>commit 清單裡的 <kbd>Enter</kbd> 是 checkout 那個 commit</b>，不是開起來看，小心。
     只想複製 hash 按 <kbd>Ctrl+y</kbd>，想看改了哪些檔案按 <kbd>Ctrl+d</kbd>。</div>
+  <div class="note"><b>lazygit 裡面怎麼操作：</b>畫面左邊分成幾塊（檔案、分支、commit⋯），
+    按 <kbd>1</kbd>～<kbd>5</kbd> 或 <kbd>Tab</kbd> 切換，<kbd>j</kbd>／<kbd>k</kbd> 上下選。
+    在檔案區按 <kbd>空白鍵</kbd> stage／unstage 一個檔案、<kbd>a</kbd> 全部 stage、<kbd>d</kbd> 丟棄改動，
+    <kbd>c</kbd> 寫 commit message 並 commit、<kbd>A</kbd> 修改上一個 commit。
+    <kbd>P</kbd>（大寫）push、<kbd>p</kbd>（小寫）pull；分支區按 <kbd>空白鍵</kbd> 切換分支、<kbd>n</kbd> 開新分支。
+    按錯了按 <kbd>z</kbd> 復原。忘記按鍵按 <kbd>?</kbd> 看目前這塊能用的全部按鍵，<kbd>q</kbd> 離開。</div>
   <div class="note"><kbd>&lt;leader&gt;gs</kbd> 的清單裡，<kbd>→</kbd> 是 stage、<kbd>←</kbd> 是 unstage、<kbd>Ctrl+x</kbd> 是丟棄改動。</div>
   <div class="note"><b><kbd>&lt;leader&gt;ge</kbd> 之後怎麼回到原狀：</b>
     想關掉檔案樹就再按一次 <kbd>&lt;leader&gt;ge</kbd>（或在樹裡按 <kbd>q</kbd>）；
