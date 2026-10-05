@@ -95,7 +95,7 @@ mark { background: var(--hl); color: inherit; border-radius: 3px; }
     <nav>
       <a href="#map">畫面地圖</a><a href="#jump">跳視窗</a><a href="#tree">檔案樹</a><a href="#buffer">上方檔名列</a>
       <a href="#tab">標籤頁</a><a href="#split">分割</a><a href="#find">找檔案</a><a href="#code">程式碼</a>
-      <a href="#edit">編輯</a><a href="#markdown">Markdown</a><a href="#git">Git</a><a href="#claude">Claude</a><a href="#test">測試偵錯</a><a href="#all">全部按鍵</a>
+      <a href="#edit">編輯</a><a href="#block">每行加字</a><a href="#markdown">Markdown</a><a href="#git">Git</a><a href="#claude">Claude</a><a href="#test">測試偵錯</a><a href="#all">全部按鍵</a>
     </nav>
   </div>
 </header>
@@ -273,6 +273,16 @@ mark { background: var(--hl); color: inherit; border-radius: 3px; }
     <tr><td><kbd>Ctrl+/</kbd></td><td>開／關下方終端機</td></tr>
     <tr><td><kbd>&lt;leader&gt;qq</kbd></td><td>離開 nvim</td></tr>
   </table>
+</section>
+
+<section class="card" id="block" data-kw="區塊選取 visual block 每一行 行首 行尾 最前面 最後面 插入 加字 多行 ctrl+v normal">
+  <h3>在選取的每一行最前面／最後面加字</h3>
+  <table>
+    <tr><td><kbd>Ctrl+v</kbd> 往下選 → <kbd>I</kbd> 打字 → <kbd>Esc</kbd></td><td>每一行最前面都加上同樣的字（游標先按 <kbd>0</kbd> 移到行首）</td></tr>
+    <tr><td><kbd>Ctrl+v</kbd> 往下選 → <kbd>$</kbd> → <kbd>A</kbd> 打字 → <kbd>Esc</kbd></td><td>每一行最後面都加上同樣的字</td></tr>
+    <tr><td>用 <kbd>V</kbd> 選好後打 <code>:normal I//&nbsp;</code></td><td>對選取的每一行執行「按 <kbd>I</kbd> 再打 <code>//&nbsp;</code>」（按 <kbd>:</kbd> 會自動帶出 <code>'&lt;,'&gt;</code>）</td></tr>
+  </table>
+  <div class="note">打字時只看得到第一行在變，這是正常的。按下 <kbd>Esc</kbd> 後，其他行才會一起出現。</div>
 </section>
 
 <section class="card" id="markdown" data-kw="markdown md 預覽 preview 瀏覽器 渲染 render readme 文件 筆記">
